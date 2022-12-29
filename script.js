@@ -2,7 +2,7 @@
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// BANKIST APP
+// BANK APP
 
 /////////////////////////////////////////////////
 // Data
@@ -26,7 +26,7 @@ const account1 = {
     '2020-07-12T10:51:36.790Z',
   ],
   currency: 'EUR',
-  locale: 'pt-PT', // de-DE
+  locale: 'en-UK ', // de-DE
 };
 
 const account2 = {
@@ -56,16 +56,20 @@ const account3 = {
   pin: 3333,
 
   movementsDates: [
-    '2021-10-50T78:73:33.324Z',
-    '2021-11-40T09:93:16.098Z',
-    '2021-12-40T18:94:23.865Z',
-    '2022-05-24T04:75:46.240Z',
-    '2022-06-06T15:34:06.436Z',
-    '2022-07-49T14:67:26.374Z',
-    '2022-11-40T18:09:59.271Z',
-    '2022-12-34T04:06:20.902Z',
+    '2021-11-01T13:15:33.035Z',
+    '2021-11-30T09:48:16.867Z',
+    '2021-12-25T06:04:23.907Z',
+    '2022-01-25T14:18:46.235Z',
+    '2022-02-05T16:33:06.386Z',
+    '2022-12-25T14:43:26.374Z',
+    '2022-12-28T18:49:59.371Z',
+    '2022-12-29T12:01:20.894Z',
   ],
+  currency: 'USD',
+  locale: 'en-US'
 };
+// console.log(new Date());
+
 
 const accounts = [account1, account2, account3];
 
@@ -98,13 +102,32 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+const displayDate = function (acc, locale) {
+  const calDayPassed = (date1, date2) =>
+ Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
+    const dayPassed = calDayPassed(new Date(), acc)
+    console.log(dayPassed);
+    if(dayPassed === 0) return  `Today`;
+    if(dayPassed === 1) return  `Yesterday`;
+    if(dayPassed <= 7) return  `${dayPassed} days ago`;
+    else{
+      // const days1 = calDayPassed(new Date(2022, 10, 17), new Date(2022, 11, 29));
+ 
+      return new Intl.DateTimeFormat(locale).format(acc.movementsDates);
+    }
+};
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
+    // you can loop over another array this trick e.g acc.movementsDates[i]
+    const dates = new Date(acc.movementsDates[i]);
+    const display = displayDate(dates, acc.locale);
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -112,6 +135,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
+       <div class="movements__date">${display}</div>
         <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
@@ -160,7 +184,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -172,7 +196,25 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+//  FAKE LOGIN
+currentAccount = account3;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
 
+// //EXPERIMENTING API
+// const currentDate = new Date();
+// const operations={
+//   day: `numeric`,
+//   weekday: `long`,
+//   hours: `numeric`,
+//   minutes: `numeric`,
+//   year: `numeric`,
+//   month: `long`
+// }
+// // you can get user location and language from the user browser
+// const locale= navigator.languages
+// console.log(locale);
+// labelDate.textContent = new Intl.DateTimeFormat(locale, operations).format(currentDate)
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
@@ -180,7 +222,7 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  (currentAccount);
+  currentAccount;
 
   if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
@@ -188,7 +230,21 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
-
+    // date Format day/ month/ year
+    //EXPERIMENTING API
+const currentDate = new Date();
+const operations={
+  day: `numeric`,
+  weekday: `long`,
+  hours: `numeric`,
+  minutes: `numeric`,
+  year: `numeric`,
+  month: `long`
+}
+// you can get user location and language from the user browser
+const locale= navigator.languages
+console.log(locale);
+labelDate.textContent = new Intl.DateTimeFormat(locale, operations).format(currentDate)
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
@@ -215,7 +271,9 @@ btnTransfer.addEventListener('click', function (e) {
     // Doing the transfer
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
-
+    //Add new Date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
     // Update UI
     updateUI(currentAccount);
   }
@@ -229,7 +287,9 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
-
+    //Add new Date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
     // Update UI
     updateUI(currentAccount);
   }
@@ -246,7 +306,7 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    console.log(index);
+    index;
     // .indexOf(23)
 
     // Delete account
@@ -328,23 +388,23 @@ randomInt(1, 1000);
 console.log(Math.trunc(38.96896));
 //other ways approximation
 console.log(Math.round(89.5));
-(Math.round(89.4));
+Math.round(89.4);
 
 // just round up not considering the nearest number
-(Math.ceil(34.8)); //34
+Math.ceil(34.8); //34
 
 // just round down
-(Math.ceil(34.8)); //34
+Math.ceil(34.8); //34
 
 // rounding decimals
-((2.7).toFixed(0)); // `3`
-((2.757664).toFixed(3)); // `2.758`
-(+(2.757664).toFixed(2)); // 2.76
+(2.7).toFixed(0); // `3`
+(2.757664).toFixed(3); // `2.758`
++(2.757664).toFixed(2); // 2.76
 
 ///TOPIC  Remainder Operator
 console.log(5 % 2);
 
-const oddEven = Array.from({ length: 20 }, (_) => {
+const oddEven = Array.from({ length: 20 }, _ => {
   let numbers = randomInt(0, 100);
   if (numbers % 2 === 0) {
     // console.log(`${numbers} is an even number`);
@@ -353,27 +413,26 @@ const oddEven = Array.from({ length: 20 }, (_) => {
   }
 });
 // let values =  Array.from(
-//   document.querySelectorAll(`.movements__row`), (mov, i) => 
+//   document.querySelectorAll(`.movements__row`), (mov, i) =>
 //      console.log(mov.textContent)
 //   )
 
-labelBalance.addEventListener(`click`,()=> console.log()
-)
-document.querySelector(`body`).addEventListener(`keydown`, function(e){  
-if(e.key === `Enter`){
-  Array.from(document.querySelectorAll(`.movements__row`), (mov, i) => {
-    const iterator = i;
-    // console.log(iterator % 2,iterator % 3);
-    console.log(iterator);
-    if( iterator % 2 === 0 ){
-     mov.style.backgroundColor = `red`
-    } if(iterator % 3 === 0){
-      // mov.style.backgroundColor = `blue`
-    } 
+labelBalance.addEventListener(`click`, () => console.log());
+document.querySelector(`body`).addEventListener(`keydown`, function (e) {
+  if (e.key === `Enter`) {
+    Array.from(document.querySelectorAll(`.movements__row`), (mov, i) => {
+      const iterator = i;
+      // console.log(iterator % 2,iterator % 3);
+      console.log(iterator);
+      if (iterator % 2 === 0) {
+        mov.style.backgroundColor = `red`;
+      }
+      if (iterator % 3 === 0) {
+        // mov.style.backgroundColor = `blue`
+      }
+    });
   }
-
-)}
-})
+});
 
 // TOPIC BigInt
 //  (878696284676767575775859084805495n);
@@ -381,12 +440,33 @@ if(e.key === `Enter`){
 // (BigInt( 878696284676767575775859084805495));
 
 //TOPIC DATES & TIME
- const now = new Date();
- console.log(now); 
-
-console.log(new Date(2022, 11,28,9,23,5));
+const now = new Date();
+// console.log(now);
+const nod = new Date(2022, 11, 28, 9, 23, 5);
 
 // creating a unix time
-console.log(new Date(0)); // Thu Jan 01 1970 01:00:00 GMT+0100 (West Africa Standard Time)
- 
-  
+// console.log(new Date(0)); // Thu Jan 01 1970 01:00:00 GMT+0100 (West Africa Standard Time)
+
+// DATE AND TIME METHODS
+nod.getFullYear();
+nod.getMonth();
+nod.getDate();
+nod.getDay();
+nod.getHours();
+nod.getMinutes();
+nod.getSeconds();
+nod.toISOString(); // 2022-12-28T08:23:05.000Z
+nod.getTime(); // unix date for current date (1672215785000)
+
+//You can also set Dates
+// nod.setFullYear(2023);
+
+// TOPIC DATE OPERATIONS
+const future = new Date(2023, 10, 19, 15, 23);
+// console.log(future);
+// console.log(+future);
+
+const calDayPassed = (date1, date2) => (date2 - date1) / (1000 * 60 * 60 * 24);
+
+const days1 = calDayPassed(new Date(2022, 10, 17), new Date(2022, 11, 29));
+console.log(days1);
