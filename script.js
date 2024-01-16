@@ -214,25 +214,24 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 const startLogOutTimer = function () {
-
- const tick = function () {
+  const tick = function () {
     // const hours = String(Math.trunc(time/3600))
     const min = String(Math.trunc(time / 60)).padStart(2, 0);
     const sec = String(Math.trunc(time % 60)).padStart(2, 0);
     labelTimer.textContent = `${min}:${sec}`;
-  
+
     // when 0 seconds, stop timer and Logout user
     if (time === 0) {
-      clearInterval(timer)
-     labelWelcome.textContent= `Log in to Continue`
-    // Hide UI
-    containerApp.style.opacity = 0;
+      clearInterval(timer);
+      labelWelcome.textContent = `Log in to Continue`;
+      // Hide UI
+      containerApp.style.opacity = 0;
     }
-    // The time Decrease must come after the stop timer 
+    // The time Decrease must come after the stop timer
     // because the time beings at 1 sec
-      // Decrease time
-      time--;
-  }
+    // Decrease time
+    time--;
+  };
   //Set time to 10 minutes
   let time = 360;
 
@@ -281,7 +280,6 @@ btnLogin.addEventListener('click', function (e) {
     containerApp.style.opacity = 100;
     // date Format day/ month/ year
 
-
     //EXPERIMENTING API
     const currentDate = new Date();
     const operations = {
@@ -302,7 +300,7 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
-      if(timer) clearInterval(timer)
+    if (timer) clearInterval(timer);
     timer = startLogOutTimer();
     // Update UI
     updateUI(currentAccount);
@@ -329,13 +327,12 @@ btnTransfer.addEventListener('click', function (e) {
     //Add new Date
     currentAccount.movementsDates.push(new Date().toISOString());
     receiverAcc.movementsDates.push(new Date().toISOString());
-     // Reset timer
-     clearInterval(timer)
-     timer = startLogOutTimer();
-   }
-    // Update UI
-    updateUI(currentAccount);
-   
+    // Reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
+  }
+  // Update UI
+  updateUI(currentAccount);
 });
 
 btnLoan.addEventListener('click', function (e) {
@@ -352,9 +349,9 @@ btnLoan.addEventListener('click', function (e) {
       currentAccount.movements.push(amount);
       //Add new Date
       currentAccount.movementsDates.push(new Date().toISOString());
-       // Reset timer
-    clearInterval(timer)
-    timer = startLogOutTimer();
+      // Reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
       // Update UI
       updateUI(currentAccount);
     }
@@ -394,7 +391,7 @@ btnSort.addEventListener('click', function (e) {
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
+// LECTURE
 //TOPIC Number :converting and checking numbers
 
 // Some Bug in javascript to be careful of
@@ -406,18 +403,25 @@ Number(`30`);
 +`30`; // is possible because of type coercion
 
 //Parsing
+// PARSING IS A FUNCTION THAT TAKES A STRING AND CONVERTS IT TO A NUMBER
 // it's used to parse a Number from a string
-// in to work the string has to start with a number not a word e.g
+// for to work the string has to start with a number not a word e.g
 
 // THE PARSEINT FUNCTION CAN TAKE A SECOND ARGUMENT KNOW AS : REGEX
 // regex is based the base Number system you are using E.G base 10
 Number.parseInt(`30px`, 10); // 30
 Number.parseInt(`esp30`); // NAN
-
+const check = Number.parseInt(`30px`, 10);
+console.log(check);
+console.log(`` + 30 + check);
 // parsefloat
 Number.parseInt(`2.5rem`); //2
 Number.parseFloat(`2.5rem`); //2.5
 // This function are know as global functions
+// PARSE FLOAT IS USED TO CONVERT A STRING TO A FLOAT
+// BUT THE DIFFERENCE BETWEEN PARSEINT AND PARSEFLOAT IS THAT
+// PARSEINT CONVERTS A STRING TO A WHOLE NUMBER
+// WHILE PARSEFLOAT CONVERTS A STRING TO A DECIMAL NUMBER
 
 //isNaN a function
 // it is used to determine weather something is not a Number
@@ -446,16 +450,19 @@ Math.min(5, 6, 56, 59, 48, 98, 47); // 4
 
 const randomInt = (min, max) =>
   Math.trunc(Math.random() * (max - min) + 1) + min;
-randomInt(30, 50);
+// randomInt(30, 50); //
 
-randomInt(1, 1000);
+console.log(randomInt(1, 1000)); //
 
 // Rounding integers
-console.log(Math.trunc(38.96896));
+// THE THREE METHODS BELOW ARE USED TO ROUND NUMBERS
+// Math.trunc is used to remove the decimal part of a number
+// Math.round is used to round up a number
+// Math.ceil is used to round up a number
+console.log(Math.trunc(38.96896)); // 38
 //other ways approximation
-console.log(Math.round(89.5));
-Math.round(89.4);
-
+console.log(Math.round(89.5)); // 90
+Math.round(89.4); // 89
 // just round up not considering the nearest number
 Math.ceil(34.8); //34
 
@@ -463,6 +470,10 @@ Math.ceil(34.8); //34
 Math.ceil(34.8); //34
 
 // rounding decimals
+// toFixed is used to round up a number to a certain decimal place
+// toFixed returns a string
+// toFixed is a method on the Number prototype
+
 (2.7).toFixed(0); // `3`
 (2.757664).toFixed(3); // `2.758`
 +(2.757664).toFixed(2); // 2.76
@@ -505,24 +516,37 @@ document.querySelector(`body`).addEventListener(`keydown`, function (e) {
 // or
 // (BigInt( 878696284676767575775859084805495));
 
+//LECTURE: Creating Dates
 //TOPIC DATES & TIME
 const now = new Date();
+// THE DATE CONSTRUCTOR CAN TAKE A STRING AS AN ARGUMENT
+// IN THE ORDER OF YEAR, MONTH, DAY, HOUR, MINUTES, SECONDS
+// const test = new Date(`December 24, 2022`);
+// console.log(test);
+// console.log(new Date(`December 24, 2022`));
 // console.log(now);
 const nod = new Date(2022, 11, 28, 9, 23, 5);
 
 // creating a unix time
-// console.log(new Date(0)); // Thu Jan 01 1970 01:00:00 GMT+0100 (West Africa Standard Time)
+console.log(new Date(0)); // Thu Jan 01 1970 01:00:00 GMT+0100 (West Africa Standard Time)
 
 // DATE AND TIME METHODS
-nod.getFullYear();
-nod.getMonth();
-nod.getDate();
-nod.getDay();
-nod.getHours();
-nod.getMinutes();
-nod.getSeconds();
-nod.toISOString(); // 2022-12-28T08:23:05.000Z
-nod.getTime(); // unix date for current date (1672215785000)
+// nod.getFullYear();
+// nod.getMonth();
+// nod.getDate();
+// nod.getDay();
+// nod.getHours();
+// nod.getMinutes();
+// nod.getSeconds();
+// nod.toISOString(); // 2022-12-28T08:23:05.000Z
+// nod.getTime(); // unix date for current date (1672215785000)
+console.log(now.getFullYear());
+console.log(now.getUTCFullYear());
+// THE BETWEEN GETUTC AND GET IS THAT `GETUTC` IS USED TO GET THE UNIVERSAL TIME
+// WHILE `GET` IS USED TO GET THE LOCAL TIME OF THE USER.
+//
+console.log(now.getUTCDate());
+console.log(now.getDate());
 
 //You can also set Dates
 // nod.setFullYear(2023);
@@ -530,11 +554,12 @@ nod.getTime(); // unix date for current date (1672215785000)
 // TOPIC DATE OPERATIONS
 const future = new Date(2023, 10, 19, 15, 23);
 // console.log(future);
-// console.log(+future);
+console.log(+future);
+console.log(future.getDate());
 
 const calDayPassed = (date1, date2) => (date2 - date1) / (1000 * 60 * 60 * 24);
 
-const days1 = calDayPassed(new Date(2022, 10, 17), new Date(2022, 11, 29));
+const days1 = calDayPassed(new Date(2022, 10, 17), new Date(2024, 1, 16));
 console.log(days1);
 // INTL ON NUMBER
 const num = 35000;
@@ -544,6 +569,14 @@ const options = {
   currency: `ngn`,
   maximumFractionDigits: 2,
 };
+
+// TOPIC INTL AND INTL NUMBERFORMAT API
+// THE INTL API IS USED TO FORMAT NUMBERS AND DATES
+// ITS A BUILT IN API IN JAVASCRIPT AND INTL.NUMBERFORMAT IS A CONSTRUCTOR
+// THAT TAKES TWO ARGUMENTS THE FIRST IS THE LOCALE AND THE SECOND IS THE OPTIONS\
+//EXAMPLE USING NATURAL LANGUAGE INTERFACE 
+// FOR INFORMATION OM MDN CHECK THE LINK BELOW
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
 console.log(`US:  `, new Intl.NumberFormat(`en-US`).format(num));
 console.log(`US:  `, new Intl.NumberFormat(`en-US`, options).format(num));
 
