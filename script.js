@@ -213,6 +213,10 @@ const updateUI = function (acc) {
   // Display summary
   calcDisplaySummary(acc);
 };
+/**
+ * Starts a logout timer.
+ * @returns {number} The ID of the timer interval.
+ */
 const startLogOutTimer = function () {
   const tick = function () {
     // const hours = String(Math.trunc(time/3600))
@@ -571,14 +575,23 @@ const options = {
 };
 
 // TOPIC INTL AND INTL NUMBERFORMAT API
+
 // THE INTL API IS USED TO FORMAT NUMBERS AND DATES
-// ITS A BUILT IN API IN JAVASCRIPT AND INTL.NUMBERFORMAT IS A CONSTRUCTOR
-// THAT TAKES TWO ARGUMENTS THE FIRST IS THE LOCALE AND THE SECOND IS THE OPTIONS\
-//EXAMPLE USING NATURAL LANGUAGE INTERFACE 
+// ITS A BUILT IN API IN JAVASCRIPT AND INTL.NUMBERFORMAT
+// IS A CONSTRUCTOR INSIDE THE INTL API
+// THAT TAKES TWO ARGUMENTS THE FIRST IS THE LOCALE
+// AND THE SECOND IS THE OPTIONS
+//EXAMPLE USING NATURAL LANGUAGE INTERFACE
 // FOR INFORMATION OM MDN CHECK THE LINK BELOW
+// NOTE THE INTL IS NOT A CONSTRUCTOR AND ITS A GLOBAL OBJECT
+// IT A NAMESPACE IN THE ECMA SCRIPT INTERNATIONALIZATION API SPECIFICATION
+// WHICH PROVIDES LANGUAGE SENSITIVE STRING COMPARISON,
+// NUMBER FORMATTING AND DATE AND TIME FORMATTING.
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
-console.log(`US:  `, new Intl.NumberFormat(`en-US`).format(num));
-console.log(`US:  `, new Intl.NumberFormat(`en-US`, options).format(num));
+
+// console.log(`US:  `, new Intl.NumberFormat(`en-US`).format(num));
+// console.log(`US:  `, new Intl.NumberFormat(`en-US`, options).format(num));
+// console.log(`US:  `, new Intl.NumberFormat(`en-US`, options).format(36744747));
 
 // test
 const number = 123456.789;
@@ -605,7 +618,21 @@ console.log(
 // expected output: "1,23,000"
 
 // TOPIC: Timer SetTimeOut & SetInterval
+
+// THE SETTIMEOUT IS USED TO RUN A FUNCTION AFTER A CERTAIN TIME
+// THE FIRST PARAMETER IS THE FUNCTION TO RUN AND THE SECOND IS THE TIME
+// THE THIRD IS THE PARAMETER TO PASS TO THE FUNCTION TO RUN
+// THE FUNCTION IN MILLISECONDS
+// THE SETTIMEOUT RETURNS A NUMBER WHICH IS THE ID OF THE TIMER
+
+/**
+ * Represents a timer that logs a message after a specified delay.
+ *
+ * @type {number}
+ */
+
 const events = [`Events`, `Checker`];
+
 const timerOut = setTimeout(
   (eve, event2) => console.log(`will ${eve} after 4 sec ${event2}`),
   4000,
@@ -615,6 +642,8 @@ const timerOut = setTimeout(
 if (events.includes(`Checker`)) {
   clearTimeout(timerOut);
 }
+
+console.log(timerOut);
 //SetInterval
 setInterval(() => {
   const now = new Date();
