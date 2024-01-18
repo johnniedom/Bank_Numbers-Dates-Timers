@@ -645,16 +645,33 @@ if (events.includes(`Checker`)) {
 
 console.log(timerOut);
 //SetInterval
+// THE SETINTERVAL IS USED TO RUN A FUNCTION AFTER A CERTAIN TIME
+// THE FIRST PARAMETER IS THE FUNCTION TO RUN AND THE SECOND IS THE TIME
+// THE THIRD IS THE PARAMETER TO PASS TO THE FUNCTION TO RUN
+// THE FUNCTION IN MILLISECONDS
+// THE SETINTERVAL RETURNS A NUMBER WHICH IS THE ID OF THE TIMER
+// THE SETINTERVAL RUNS THE FUNCTION AFTER EVERY CERTAIN TIME
+// THE SETINTERVAL IS USED TO CREATE A CLOCK
+
+
 setInterval(() => {
   const now = new Date();
-  // const option = {
-  //   hours: `numeric`,
-  //   minutes: `numeric`,
-  //   seconds: `numeric`,
-  // };
-  const minutes = now.getMinutes();
-  const seconds = `${now.getSeconds()}`.padStart(2, 0);
-  const hours = `${now.getHours()}`;
-  // const time = new Intl.DateTimeFormat(option).format(now);
-  // console.log(`${hours}:${minutes}:${seconds}`);
+  const option = {
+      hours: `numeric`,
+      minutes: `numeric`,
+      seconds: `numeric`,
+    };
+    const minutes = now.getMinutes();
+    const seconds = `${now.getSeconds()}`.padStart(2, 0);
+    const hours = `${now.getHours()}`;
+    const time = new Intl.DateTimeFormat(option).format(now);
+    console.log(`${hours}:${minutes}:${seconds}`);
 }, 1000);
+
+
+// DIFFERENCE BETWEEN SETTIMEOUT AND SETINTERVAL
+// THE SETTIMEOUT RUNS THE FUNCTION AFTER A CERTAIN TIME
+// WHILE THE SETINTERVAL RUNS THE FUNCTION AFTER EVERY CERTAIN TIME
+// THE SETTIMEOUT RUNS ONCE WHILE THE SETINTERVAL RUNS FOREVER
+// THE SETTIMEOUT IS USED TO CREATE A COUNTDOWN TIMER
+// THE SETINTERVAL IS USED TO CREATE A CLOCK
