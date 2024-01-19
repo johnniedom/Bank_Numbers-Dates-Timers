@@ -219,10 +219,11 @@ const updateUI = function (acc) {
  */
 const startLogOutTimer = function () {
   const tick = function () {
-    // const hours = String(Math.trunc(time/3600))
+    const hours = String(Math.trunc(time / 3600));
     const min = String(Math.trunc(time / 60)).padStart(2, 0);
     const sec = String(Math.trunc(time % 60)).padStart(2, 0);
     labelTimer.textContent = `${min}:${sec}`;
+    console.log(hours);
 
     // when 0 seconds, stop timer and Logout user
     if (time === 0) {
@@ -272,8 +273,9 @@ btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
 
   currentAccount = accounts.find(
-    acc => acc.username === inputLoginUsername.value
+    acc => acc.username === inputLoginUsername.value.trim()
   );
+  console.log(currentAccount);
   currentAccount;
 
   if (currentAccount?.pin === +inputLoginPin.value) {
@@ -313,30 +315,35 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
+  console.log(e);
+  // assign the the input value to a variable
   const amount = +inputTransferAmount.value;
+  // to find if  there is an user the provided userName
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
   inputTransferAmount.value = inputTransferTo.value = '';
+  setTimeout(() => {
+    if (
+      amount > 0 &&
+      receiverAcc &&
+      currentAccount.balance >= amount &&
+      receiverAcc?.username !== currentAccount.username
+    ) {
+      // Doing the transfer
+      currentAccount.movements.push(-amount);
+      receiverAcc.movements.push(amount);
+      //Add new Date
+      currentAccount.movementsDates.push(new Date().toISOString());
+      receiverAcc.movementsDates.push(new Date().toISOString());
+      // Reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }
 
-  if (
-    amount > 0 &&
-    receiverAcc &&
-    currentAccount.balance >= amount &&
-    receiverAcc?.username !== currentAccount.username
-  ) {
-    // Doing the transfer
-    currentAccount.movements.push(-amount);
-    receiverAcc.movements.push(amount);
-    //Add new Date
-    currentAccount.movementsDates.push(new Date().toISOString());
-    receiverAcc.movementsDates.push(new Date().toISOString());
-    // Reset timer
-    clearInterval(timer);
-    timer = startLogOutTimer();
-  }
-  // Update UI
-  updateUI(currentAccount);
+    // Update UI
+    updateUI(currentAccount);
+  }, 1000);
 });
 
 btnLoan.addEventListener('click', function (e) {
@@ -653,21 +660,19 @@ console.log(timerOut);
 // THE SETINTERVAL RUNS THE FUNCTION AFTER EVERY CERTAIN TIME
 // THE SETINTERVAL IS USED TO CREATE A CLOCK
 
-
 setInterval(() => {
   const now = new Date();
   const option = {
-      hours: `numeric`,
-      minutes: `numeric`,
-      seconds: `numeric`,
-    };
-    const minutes = now.getMinutes();
-    const seconds = `${now.getSeconds()}`.padStart(2, 0);
-    const hours = `${now.getHours()}`;
-    const time = new Intl.DateTimeFormat(option).format(now);
-    console.log(`${hours}:${minutes}:${seconds}`);
+    hours: `numeric`,
+    minutes: `numeric`,
+    seconds: `numeric`,
+  };
+  const minutes = now.getMinutes();
+  const seconds = `${now.getSeconds()}`.padStart(2, 0);
+  const hours = `${now.getHours()}`;
+  const time = new Intl.DateTimeFormat(option).format(now);
+  // console.log(`${hours}:${minutes}:${seconds}`);
 }, 1000);
-
 
 // DIFFERENCE BETWEEN SETTIMEOUT AND SETINTERVAL
 // THE SETTIMEOUT RUNS THE FUNCTION AFTER A CERTAIN TIME
